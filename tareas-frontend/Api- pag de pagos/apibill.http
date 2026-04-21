@@ -1,0 +1,30 @@
+@apibill_HostAddress = https://localhost:7072
+
+### GET
+GET {{apibill_HostAddress}}/expenses
+Accept: application/json
+
+### POST
+POST {{apibill_HostAddress}}/expenses
+Content-Type: application/json
+
+{
+  "description": "Nuevo gasto",
+  "amount": 99.99,
+  "date": "2026-04-13T00:00:00",
+  "category": 0
+}
+
+### PUT
+PUT {{apibill_HostAddress}}/expenses/1
+Content-Type: application/json
+
+{
+  "description": "Gasto actualizado",
+  "amount": 999.99,
+  "date": "2026-04-13T00:00:00",
+  "category": 2
+}
+
+### DELETE
+DELETE {{apibill_HostAddress}}/expenses/1

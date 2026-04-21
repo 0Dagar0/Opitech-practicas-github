@@ -1,0 +1,29 @@
+.sidebar {
+    width: 120px;
+    background: #26013a;
+    color: white;
+    height: 100%;
+    padding: 20px;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+
+
+.sidebar li {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.3s;
+}
+
+.sidebar li:hover {
+    background: #463fa4;
+}
+
+.sidebar li:hover a {
+    color: white;
+}

@@ -1,0 +1,100 @@
+.expense-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.card {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: 6px;
+    align-items: center;
+}
+
+input, select {
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+input:focus { border-color: #3b82f6; }
+
+.btn-add {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.header-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.total-badge {
+    background: #1e293b;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+.total-badge span { color: #10b981; font-weight: bold; }
+
+.expense-item {
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.6rem;
+    border-radius: 10px;
+    margin-bottom: 0.4rem;
+    border-left: 5px solid #3b82f6;
+    transition: transform 0.2s;
+}
+
+.expense-item:hover { transform: scale(1.01); }
+
+.category-tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    background: #f1f5f9;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.price { color: #ef4444; font-weight: bold; }
+
+.btn-delete {
+    background: none;
+    border: none;
+    color: #cbd5e1;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.description {
+    font-size: 0.9rem;
+}
+
+.category-tag {
+    font-size: 0.6rem;
+    padding: 1px 6px;
+}
+
+.btn-delete:hover { color: #ef4444; }

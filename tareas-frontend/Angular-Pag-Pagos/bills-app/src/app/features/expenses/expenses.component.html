@@ -1,0 +1,56 @@
+<div class="expense-container">
+    <h2>Gestión de Gastos</h2>
+
+    <div class="card">
+        <h3>{{ editingExpenseId() !== null ? 'Editar Gasto' : 'Agregar Nuevo Gasto' }}</h3>
+        <form (ngSubmit)="saveExpense()">
+            <div class="form-group">
+                <input type="text" [(ngModel)]="description" name="description" placeholder="Descripción" required />
+                <input type="number" [(ngModel)]="amount" name="amount" placeholder="Monto" required min="0.01" step="0.01" />
+                <input type="date" [(ngModel)]="date" name="date" required />
+                <select [(ngModel)]="category" name="category" required>
+                    <option value="" disabled>Categoría</option>
+                    <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+                </select>
+                <button type="submit" class="btn-add">
+                    {{ editingExpenseId() !== null ? '✓' : '+' }}
+                </button>
+            </div>
+            <div *ngIf="editingExpenseId() !== null" style="margin-top: 10px;">
+                <button type="button" (click)="cancelEdit()" style="background: none; border: 1px solid #cbd5e1; padding: 5px 15px; border-radius: 8px; cursor: pointer;">
+                    Cancelar Edición
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="header-list">
+            <h3>Lista de Gastos</h3>
+            <div class="total-badge">
+                Total de Gastos: <span>{{ totalExpenses() | currency:'USD':'symbol':'1.2-2' }}</span>
+            </div>
+        </div>
+
+        <ul *ngIf="expenses().length > 0; else noExpenses">
+            <li *ngFor="let item of expenses()" class="expense-item">
+                <div class="expense-info">
+                    <span class="description" style="display: block; font-weight: 500;">{{ item.description }}</span>
+                    <div style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
+                        <span class="category-tag">{{ categories[item.category] }}</span>
+                        <span class="date" style="font-size: 0.8rem; color: #64748b;">{{ item.date | date:'shortDate' }}</span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span class="price">{{ item.amount | currency:'USD':'symbol':'1.2-2' }}</span>
+                    <button type="button" (click)="startEdit(item)" style="background: none; border: none; cursor: pointer; font-size: 1.2rem;">✏️</button>
+                    <button type="button" class="btn-delete" (click)="deleteExpense(item.id)">&times;</button>
+                </div>
+            </li>
+        </ul>
+
+        <ng-template #noExpenses>
+            <p style="text-align: center; color: #64748b; padding: 2rem;">No hay gastos registrados aún.</p>
+        </ng-template>
+    </div>
+</div>
