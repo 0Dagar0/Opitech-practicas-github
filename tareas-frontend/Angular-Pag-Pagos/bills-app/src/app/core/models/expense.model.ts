@@ -7,10 +7,10 @@ export interface Expense {
 }
 
 export enum ExpenseCategory {
-    Comida,
-    Transporte,
-    Vivienda,
-    Entretenimiento,
-    Salud,
-    Otros
+    Food,
+    Transportation,
+    Entertainment,
+    Utilities,
+    Healthcare,
+    Other
 }

@@ -1,48 +1,41 @@
 import { Component, inject, signal, WritableSignal, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 import { Expense, ExpenseCategory } from '../../core/models/expense.model';
 import { ExpenseService } from '../../core/services/expense.service';
-import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
     selector: 'app-expenses',
     standalone: true,
-    imports: [CommonModule, CurrencyPipe, FormsModule], 
+    imports: [CommonModule, CurrencyPipe, FormsModule],
     templateUrl: './expenses.component.html',
     styleUrls: ['./expenses.component.css'],
 })
 export class ExpensesComponent implements OnInit {
 
     private expenseService = inject(ExpenseService);
-    private cdr = inject(ChangeDetectorRef);
-
-    expenses = signal<Expense[]>([]);
-    totalExpenses = signal(0);
-
+    
+    // LOS DATOS AHORA VIENEN DEL SERVICIO (solo lectura)
+    
+    expenses = this.expenseService.expenses;      //  signal del servicio
+    totalExpenses = this.expenseService.total;    //  signal del servicio
+    
+    // DATOS DEL FORMULARIO (siguen igual)
+    
     description: string = '';
     amount: number | null = null;
     date: string = new Date().toISOString().substring(0, 10);
     category: ExpenseCategory | '' = '';
-    categories: string[] = ["Comida", "Transporte", "Vivienda", "Entretenimiento", "Salud", "Otros"];
-
+    categories: string[] = ["Food", "Transportation", "Entertainment", "Utilities", "Healthcare", "Other"];
+    
     editingExpenseId: WritableSignal<number | null> = signal(null);
-
+    
+    // ngOnInit: solo pedimos que cargue los datos
     ngOnInit() {
-        this.loadExpenses();
+        this.expenseService.loadExpenses();
     }
-
-    loadExpenses() {
-    this.expenseService.getExpenses().subscribe((data: Expense[]) => {
-        this.expenses.set(data);
-
-        this.totalExpenses.set(
-            data.reduce((acc, curr) => acc + (curr.amount || 0), 0)
-        );
-
-        this.cdr.detectChanges(); 
-    });
-    }
+    
+    // startEdit: cargar datos del gasto en el formulario
 
     startEdit(expense: Expense): void {
         this.editingExpenseId.set(expense.id);
@@ -51,66 +44,50 @@ export class ExpensesComponent implements OnInit {
         this.date = new Date(expense.date).toISOString().substring(0, 10);
         this.category = expense.category;
     }
-
+    
+    // cancelEdit: limpiar el modo edición
+    
     cancelEdit(): void {
         this.editingExpenseId.set(null);
         this.clearForm();
     }
-
+    
+    // saveExpense: llama al servicio (NO maneja suscripciones)
+    
     saveExpense(): void {
         if (!this.description || this.amount === null || this.amount <= 0 || !this.date || !this.category) {
             alert('Por favor, completa todos los campos.');
             return;
-            
         }
         
         const newExpense: Omit<Expense, 'id'> = {
             description: this.description,
             amount: this.amount,
             date: new Date(this.date),
-            category: this.categories.indexOf(this.category as any) as ExpenseCategory,
+            category: this.category as ExpenseCategory,
         };
-        console.log(newExpense);
-
+        
         const currentEditingId = this.editingExpenseId();
-
+        
         if (currentEditingId !== null) {
             const updatedExpense: Expense = { ...newExpense, id: currentEditingId };
-
-            this.expenseService.updateExpense(updatedExpense).subscribe({
-                next: () => {
-                    this.loadExpenses();
-                    this.cancelEdit();
-            },
-            error: (err) => {
-                console.error('ERROR UPDATE:', err);
-                alert('Error al editar gasto');
-            }
-        });
-
-        } 
-        else {
-            this.expenseService.addExpense(newExpense).subscribe({
-                next: () => {
-                    this.loadExpenses();
-                    this.clearForm();
-                },
-                error: (err) => {
-                    console.error('ERROR ADD:', err);
-                    alert('Error al guardar gasto');
-                }
-            });
+            this.expenseService.updateExpense(updatedExpense);
+            this.cancelEdit();
+        } else {
+            this.expenseService.addExpense(newExpense);
+            this.clearForm();
         }
     }
-
+    
+    // deleteExpense: llama al servicio
     deleteExpense(id: number): void {
         if (confirm('¿Estás seguro de que quieres eliminar este gasto?')) {
-            this.expenseService.deleteExpense(id).subscribe(() => {
-                this.loadExpenses();
-            });
+            this.expenseService.deleteExpense(id);
         }
     }
-
+    
+    // clearForm: limpiar el formulario
+    
     private clearForm(): void {
         this.description = '';
         this.amount = null;
