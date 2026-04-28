@@ -1,97 +1,156 @@
-import { Component, inject, signal, WritableSignal, OnInit } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Expense, ExpenseCategory } from '../../core/models/expense.model';
-import { ExpenseService } from '../../core/services/expense.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { Expense } from '../../core/models/expense.model';
+import { ExpenseActions } from '../../core/store/expense.actions';
+import { ExpenseState } from '../../core/store/expense.state';
+import { ModalComponent } from '../../shared/components/modal/modal.component';
 
 @Component({
     selector: 'app-expenses',
     standalone: true,
-    imports: [CommonModule, CurrencyPipe, FormsModule],
+    imports: [CommonModule, FormsModule, ModalComponent],
     templateUrl: './expenses.component.html',
-    styleUrls: ['./expenses.component.css'],
+    styleUrls: ['./expenses.component.css']
 })
 export class ExpensesComponent implements OnInit {
+    private store = inject(Store<{ expenses: ExpenseState }>);
 
-    private expenseService = inject(ExpenseService);
-    
-    // LOS DATOS AHORA VIENEN DEL SERVICIO (solo lectura)
-    
-    expenses = this.expenseService.expenses;      //  signal del servicio
-    totalExpenses = this.expenseService.total;    //  signal del servicio
-    
-    // DATOS DEL FORMULARIO (siguen igual)
-    
-    description: string = '';
-    amount: number | null = null;
-    date: string = new Date().toISOString().substring(0, 10);
-    category: ExpenseCategory | '' = '';
-    categories: string[] = ["Food", "Transportation", "Entertainment", "Utilities", "Healthcare", "Other"];
-    
-    editingExpenseId: WritableSignal<number | null> = signal(null);
-    
-    // ngOnInit: solo pedimos que cargue los datos
-    ngOnInit() {
-        this.expenseService.loadExpenses();
-    }
-    
-    // startEdit: cargar datos del gasto en el formulario
+    isModalOpen: boolean = false;
+    modalTitle: string = '';
+    isEditModalOpen: boolean = false;
+    editModalTitle: string = '✏️ Editar Gasto';
+    isDeleteModalOpen: boolean = false;
+    deleteModalTitle: string = '🗑️ Confirmar Eliminación';
+    deleteExpenseId: number | null = null;
+    expenses$: Observable<Expense[]>;
+    total$: Observable<number>;
+    loading$: Observable<boolean>;
+    error$: Observable<string | null>;
 
-    startEdit(expense: Expense): void {
-        this.editingExpenseId.set(expense.id);
-        this.description = expense.description;
-        this.amount = expense.amount;
-        this.date = new Date(expense.date).toISOString().substring(0, 10);
-        this.category = expense.category;
+    newExpense: Omit<Expense, 'id'> = {
+        description: '',
+        amount: 0,
+        date: new Date(),
+        category: 0
+    };
+
+    editingExpense: Expense | null = null;
+
+    constructor() {
+        this.expenses$ = this.store.select(state => state.expenses.expenses);
+        this.total$ = this.store.select(state => state.expenses.total);
+        this.loading$ = this.store.select(state => state.expenses.loading);
+        this.error$ = this.store.select(state => state.expenses.error);
     }
-    
-    // cancelEdit: limpiar el modo edición
-    
-    cancelEdit(): void {
-        this.editingExpenseId.set(null);
-        this.clearForm();
+
+    ngOnInit(): void {
+        this.store.dispatch(ExpenseActions.loadExpenses());
     }
-    
-    // saveExpense: llama al servicio (NO maneja suscripciones)
-    
-    saveExpense(): void {
-        if (!this.description || this.amount === null || this.amount <= 0 || !this.date || !this.category) {
-            alert('Por favor, completa todos los campos.');
+
+    addExpense(): void {
+        if (!this.newExpense.description || this.newExpense.amount <= 0) {
+            alert('Por favor complete los campos');
             return;
         }
-        
-        const newExpense: Omit<Expense, 'id'> = {
-            description: this.description,
-            amount: this.amount,
-            date: new Date(this.date),
-            category: this.category as ExpenseCategory,
+
+        const expenseToSend = {
+            ...this.newExpense,
+            date: new Date(this.newExpense.date)
         };
-        
-        const currentEditingId = this.editingExpenseId();
-        
-        if (currentEditingId !== null) {
-            const updatedExpense: Expense = { ...newExpense, id: currentEditingId };
-            this.expenseService.updateExpense(updatedExpense);
-            this.cancelEdit();
-        } else {
-            this.expenseService.addExpense(newExpense);
-            this.clearForm();
+
+        this.store.dispatch(ExpenseActions.addExpense({
+            expense: expenseToSend
+        }));
+
+    }
+
+    editExpense(expense: Expense): void {
+        this.editingExpense = { ...expense };
+    }
+
+    updateExpense(): void {
+        if (this.editingExpense) {
+            this.store.dispatch(ExpenseActions.updateExpense({
+                expense: this.editingExpense
+            }));
         }
     }
-    
-    // deleteExpense: llama al servicio
+
+    cancelEdit(): void {
+        this.editingExpense = null;
+    }
+
     deleteExpense(id: number): void {
-        if (confirm('¿Estás seguro de que quieres eliminar este gasto?')) {
-            this.expenseService.deleteExpense(id);
+        if (confirm('¿Eliminar este gasto?')) {
+            this.store.dispatch(ExpenseActions.deleteExpense({ id }));
         }
     }
-    
-    // clearForm: limpiar el formulario
-    
-    private clearForm(): void {
-        this.description = '';
-        this.amount = null;
-        this.date = new Date().toISOString().substring(0, 10);
-        this.category = '';
+
+    getCategoryName(category: number): string {
+        const categories = ['Food', 'Transportation', 'Entertainment', 'Utilities', 'Healthcare', 'Other'];
+        return categories[category] || 'Other';
     }
+
+    formatDateForInput(date: Date): string {
+        return date.toISOString().split('T')[0];
+    }
+
+    openAddModal(): void {
+        this.modalTitle = '➕ Agregar Nuevo Gasto';
+        this.isModalOpen = true;
+    }
+
+    closeModal(): void {
+        this.isModalOpen = false;
+        // Limpiar formulario al cerrar
+        this.newExpense = {
+            description: '',
+            amount: 0,
+            date: new Date(),
+            category: 0
+        };
+    }
+
+    confirmAdd(): void {
+        this.addExpense();
+        this.closeModal();
+    }
+
+    openEditModal(expense: Expense): void {
+        console.log('openEditModal llamado', expense);  // ← LOG
+        this.editingExpense = { ...expense };
+        this.isEditModalOpen = true;
+        console.log('isEditModalOpen:', this.isEditModalOpen);  // ← LOG
+    }
+
+    closeEditModal(): void {
+        this.isEditModalOpen = false;
+        this.editingExpense = null;
+    }
+
+    confirmEdit(): void {
+        this.updateExpense();
+        this.closeEditModal();
+    }
+
+    openDeleteModal(id: number): void {
+        this.deleteExpenseId = id;
+        this.isDeleteModalOpen = true;
+    }
+
+    closeDeleteModal(): void {
+        this.isDeleteModalOpen = false;
+        this.deleteExpenseId = null;
+    }
+
+    confirmDelete(): void {
+        if (this.deleteExpenseId !== null) {
+            this.store.dispatch(ExpenseActions.deleteExpense({ id: this.deleteExpenseId }));
+        }
+        this.closeDeleteModal();
+    }
+
 }

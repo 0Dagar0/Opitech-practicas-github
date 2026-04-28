@@ -1,12 +1,19 @@
-<header style="background-color: #f0f0f0; padding: 1rem; border-bottom: 1px solid #ccc;">
-    <h1>Mis Gastos</h1>
-    <nav>
-        
-    </nav>
-</header>
-<main class="content">
-    <router-outlet></router-outlet> 
-</main>
-<footer style="background-color: #f0f0f0; padding: 0.5rem; border-top: 1px solid #ccc; text-align: center; position: fixed; bottom: 0; width: 100%;">
-    <p>&copy; 2026 Mi App de Pagos</p>
-</footer>
+<div class="app-container">
+    <header>
+        <h1>Mis Gastos</h1>
+    </header>
+
+    <div class="main-content">
+        <aside class="sidebar">
+            <app-sidebar></app-sidebar>
+        </aside>
+
+        <main class="content">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Mi App de Pagos</p>
+    </footer>
+</div>

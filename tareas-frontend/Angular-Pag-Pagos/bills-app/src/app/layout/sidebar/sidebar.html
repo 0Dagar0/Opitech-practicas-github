@@ -1,7 +1,10 @@
-<div class="sidebar">
-    <ul>
+<div class="sidebar-container">
+    <ul class="nav-menu">
         <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
         <li><a routerLink="/expenses" routerLinkActive="active">Gastos</a></li>
         <li>Ingresos</li>
     </ul>
+    <div class="logout-container">
+        <button class="btn-logout" (click)="logout()">Cerrar sesión</button>
+    </div>
 </div>
