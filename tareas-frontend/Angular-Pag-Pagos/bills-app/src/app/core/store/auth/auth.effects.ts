@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { map, mergeMap, catchError, delay } from 'rxjs/operators';
+import { map, mergeMap, delay } from 'rxjs/operators';
 import { AuthActions } from './auth.actions';
 
 @Injectable()
@@ -44,9 +44,8 @@ export class AuthEffects {
                         return AuthActions.restoreAuth({ username: data.username });
                     }
                 }
-                return AuthActions.logoutSuccess(); // si no hay sesión, logout implícito
+                return AuthActions.logoutSuccess();
             })
         )
     );
-
 }

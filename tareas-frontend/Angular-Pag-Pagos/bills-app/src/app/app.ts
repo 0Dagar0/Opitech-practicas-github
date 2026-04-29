@@ -1,12 +1,19 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AuthActions } from './core/store/auth/auth.actions';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
-export class App {
-  protected readonly title = signal('bills-app');
+export class App implements OnInit {
+  private store = inject(Store);
+
+  ngOnInit() {
+    this.store.dispatch(AuthActions.checkAuth());
+  }
 }

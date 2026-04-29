@@ -18,13 +18,14 @@ import { ModalComponent } from '../../shared/components/modal/modal.component';
 export class ExpensesComponent implements OnInit {
     private store = inject(Store<{ expenses: ExpenseState }>);
 
-    isModalOpen: boolean = false;
-    modalTitle: string = '';
-    isEditModalOpen: boolean = false;
-    editModalTitle: string = '✏️ Editar Gasto';
-    isDeleteModalOpen: boolean = false;
-    deleteModalTitle: string = '🗑️ Confirmar Eliminación';
+    isModalOpen = false;
+    modalTitle = '';
+    isEditModalOpen = false;
+    editModalTitle = '✏️ Editar Gasto';
+    isDeleteModalOpen = false;
+    deleteModalTitle = '🗑️ Confirmar Eliminación';
     deleteExpenseId: number | null = null;
+
     expenses$: Observable<Expense[]>;
     total$: Observable<number>;
     loading$: Observable<boolean>;
@@ -38,6 +39,9 @@ export class ExpensesComponent implements OnInit {
     };
 
     editingExpense: Expense | null = null;
+
+    isAddFormDirty = false;
+    isEditFormDirty = false;
 
     constructor() {
         this.expenses$ = this.store.select(state => state.expenses.expenses);
@@ -55,37 +59,16 @@ export class ExpensesComponent implements OnInit {
             alert('Por favor complete los campos');
             return;
         }
-
         const expenseToSend = {
             ...this.newExpense,
             date: new Date(this.newExpense.date)
         };
-
-        this.store.dispatch(ExpenseActions.addExpense({
-            expense: expenseToSend
-        }));
-
-    }
-
-    editExpense(expense: Expense): void {
-        this.editingExpense = { ...expense };
+        this.store.dispatch(ExpenseActions.addExpense({ expense: expenseToSend }));
     }
 
     updateExpense(): void {
         if (this.editingExpense) {
-            this.store.dispatch(ExpenseActions.updateExpense({
-                expense: this.editingExpense
-            }));
-        }
-    }
-
-    cancelEdit(): void {
-        this.editingExpense = null;
-    }
-
-    deleteExpense(id: number): void {
-        if (confirm('¿Eliminar este gasto?')) {
-            this.store.dispatch(ExpenseActions.deleteExpense({ id }));
+            this.store.dispatch(ExpenseActions.updateExpense({ expense: this.editingExpense }));
         }
     }
 
@@ -94,18 +77,20 @@ export class ExpensesComponent implements OnInit {
         return categories[category] || 'Other';
     }
 
-    formatDateForInput(date: Date): string {
-        return date.toISOString().split('T')[0];
-    }
-
+    // ========== MODAL AGREGAR ==========
     openAddModal(): void {
+        this.isAddFormDirty = false;
         this.modalTitle = '➕ Agregar Nuevo Gasto';
         this.isModalOpen = true;
     }
 
     closeModal(): void {
+        if (this.isAddFormDirty) {
+            const confirm = window.confirm('Hay cambios sin guardar. ¿Estás seguro de que quieres salir?');
+            if (!confirm) return;
+        }
         this.isModalOpen = false;
-        // Limpiar formulario al cerrar
+        this.isAddFormDirty = false;
         this.newExpense = {
             description: '',
             amount: 0,
@@ -115,27 +100,47 @@ export class ExpensesComponent implements OnInit {
     }
 
     confirmAdd(): void {
+        if (this.isAddFormDirty) {
+            this.isAddFormDirty = false;
+        }
         this.addExpense();
         this.closeModal();
     }
 
+    markAddFormDirty(): void {
+        this.isAddFormDirty = true;
+    }
+
+    // ========== MODAL EDITAR ==========
     openEditModal(expense: Expense): void {
-        console.log('openEditModal llamado', expense);  // ← LOG
+        this.isEditFormDirty = false;
         this.editingExpense = { ...expense };
         this.isEditModalOpen = true;
-        console.log('isEditModalOpen:', this.isEditModalOpen);  // ← LOG
     }
 
     closeEditModal(): void {
+        if (this.isEditFormDirty) {
+            const confirm = window.confirm('Hay cambios sin guardar. ¿Estás seguro de que quieres salir?');
+            if (!confirm) return;
+        }
         this.isEditModalOpen = false;
+        this.isEditFormDirty = false;
         this.editingExpense = null;
     }
 
     confirmEdit(): void {
+        if (this.isEditFormDirty) {
+            this.isEditFormDirty = false;
+        }
         this.updateExpense();
         this.closeEditModal();
     }
 
+    markEditFormDirty(): void {
+        this.isEditFormDirty = true;
+    }
+
+    // ========== MODAL ELIMINAR ==========
     openDeleteModal(id: number): void {
         this.deleteExpenseId = id;
         this.isDeleteModalOpen = true;
@@ -152,5 +157,4 @@ export class ExpensesComponent implements OnInit {
         }
         this.closeDeleteModal();
     }
-
 }
