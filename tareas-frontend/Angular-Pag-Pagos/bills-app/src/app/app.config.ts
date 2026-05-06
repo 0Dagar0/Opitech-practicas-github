@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
@@ -9,6 +9,7 @@ import { expenseReducer } from './core/store/expense.reducer';
 import { ExpenseEffects } from './core/store/expense.effects';
 import { authReducer } from './core/store/auth/auth.reducer';
 import { AuthEffects } from './core/store/auth/auth.effects';
+import { ReactiveFormsModule } from '@angular/forms';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,6 +21,7 @@ export const appConfig: ApplicationConfig = {
       auth: authReducer
     }),
     provideEffects([ExpenseEffects, AuthEffects]),
-    provideStoreDevtools()
+    provideStoreDevtools(),
+    importProvidersFrom(ReactiveFormsModule)
   ]
 };

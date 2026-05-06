@@ -12,7 +12,7 @@ export class AuthEffects {
         this.actions$.pipe(
             ofType(AuthActions.login),
             mergeMap(({ username, password }) => {
-                const isValid = username === 'admin' && password === '1234';
+                const isValid = username === 'Admin' && password === 'Abc1234';
                 if (isValid) {
                     localStorage.setItem('auth', JSON.stringify({ isAuthenticated: true, username }));
                     return of(AuthActions.loginSuccess({ username })).pipe(delay(500));

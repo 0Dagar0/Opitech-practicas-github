@@ -41,22 +41,36 @@
     </div>
 </div>
 
-<!-- Modal para Agregar Gasto -->
+<!-- MODAL PARA AGREGAR GASTO -->
 <app-modal [isOpen]="isModalOpen" [title]="modalTitle" (onClose)="closeModal()" (onConfirm)="confirmAdd()">
     <div class="modal-form">
+        <!-- Campo Descripción -->
         <div class="modal-field">
-            <label>Descripción</label>
-            <input type="text" [(ngModel)]="newExpense.description" (input)="markAddFormDirty()"
-                placeholder="Ej: Comida, Transporte..." required>
+            <label>Descripción *</label>
+            <input type="text" [formControl]="addDescription" (input)="markAddFormDirty()"
+                placeholder="Ej: Comida, Transporte...">
+            <div *ngIf="addDescription.invalid && addDescription.touched" style="color: red; font-size: 0.75rem;">
+                <div *ngIf="addDescription.errors?.['required']">✅ La descripción es obligatoria</div>
+                <div *ngIf="addDescription.errors?.['minlength']">📝 Mínimo 3 caracteres</div>
+                <div *ngIf="addDescription.errors?.['maxlength']">📝 Máximo 100 caracteres</div>
+            </div>
         </div>
+
+        <!-- Campo Monto -->
         <div class="modal-field">
-            <label>Monto</label>
-            <input type="number" [(ngModel)]="newExpense.amount" (input)="markAddFormDirty()" placeholder="0.00"
-                step="0.01">
+            <label>Monto *</label>
+            <input type="number" [formControl]="addAmount" (input)="markAddFormDirty()" placeholder="0.00" step="0.01">
+            <div *ngIf="addAmount.invalid && addAmount.touched" style="color: red; font-size: 0.75rem;">
+                <div *ngIf="addAmount.errors?.['required']">💰 El monto es obligatorio</div>
+                <div *ngIf="addAmount.errors?.['min']">⚠️ El monto debe ser mayor a 0</div>
+                <div *ngIf="addAmount.errors?.['max']">⚠️ El monto no puede superar 999,999.99</div>
+            </div>
         </div>
+
+        <!-- Campo Categoría -->
         <div class="modal-field">
-            <label>Categoría</label>
-            <select [(ngModel)]="newExpense.category" (change)="markAddFormDirty()">
+            <label>Categoría *</label>
+            <select [formControl]="addCategory" (change)="markAddFormDirty()">
                 <option [value]="0">🍔 Food</option>
                 <option [value]="1">🚗 Transportation</option>
                 <option [value]="2">🎬 Entertainment</option>
@@ -65,53 +79,84 @@
                 <option [value]="5">📦 Other</option>
             </select>
         </div>
+
+        <!-- Campo Fecha -->
         <div class="modal-field">
-            <label>Fecha</label>
-            <input type="date" [(ngModel)]="newExpense.date" (change)="markAddFormDirty()">
+            <label>Fecha *</label>
+            <input type="date" [formControl]="addDate" (change)="markAddFormDirty()">
+            <div *ngIf="addDate.invalid && addDate.touched" style="color: red; font-size: 0.75rem;">
+                <div *ngIf="addDate.errors?.['required']">📅 La fecha es obligatoria</div>
+            </div>
         </div>
     </div>
 </app-modal>
 
-<!-- Modal para Editar Gasto -->
+<!-- MODAL PARA EDITAR GASTO -->
 <app-modal [isOpen]="isEditModalOpen" [title]="editModalTitle" (onClose)="closeEditModal()" (onConfirm)="confirmEdit()">
-    <div *ngIf="editingExpense">
-        <div class="modal-form">
-            <div class="modal-field">
-                <label>Descripción</label>
-                <input type="text" [(ngModel)]="editingExpense.description" (input)="markEditFormDirty()"
-                    placeholder="Ej: Comida, Transporte..." required>
+    <div class="modal-form">
+        <!-- Campo Descripción -->
+        <div class="modal-field">
+            <label>Descripción *</label>
+            <input type="text" [formControl]="editDescription" (input)="markEditFormDirty()"
+                placeholder="Ej: Comida, Transporte...">
+            <div *ngIf="editDescription.invalid && editDescription.touched" style="color: red; font-size: 0.75rem;">
+                <div *ngIf="editDescription.errors?.['required']">✅ La descripción es obligatoria</div>
+                <div *ngIf="editDescription.errors?.['minlength']">📝 Mínimo 3 caracteres</div>
+                <div *ngIf="editDescription.errors?.['maxlength']">📝 Máximo 100 caracteres</div>
             </div>
-            <div class="modal-field">
-                <label>Monto</label>
-                <input type="number" [(ngModel)]="editingExpense.amount" (input)="markEditFormDirty()"
-                    placeholder="0.00" step="0.01">
+        </div>
+
+        <!-- Campo Monto -->
+        <div class="modal-field">
+            <label>Monto *</label>
+            <input type="number" [formControl]="editAmount" (input)="markEditFormDirty()" placeholder="0.00"
+                step="0.01">
+            <div *ngIf="editAmount.invalid && editAmount.touched" style="color: red; font-size: 0.75rem;">
+                <div *ngIf="editAmount.errors?.['required']">💰 El monto es obligatorio</div>
+                <div *ngIf="editAmount.errors?.['min']">⚠️ El monto debe ser mayor a 0</div>
+                <div *ngIf="editAmount.errors?.['max']">⚠️ El monto no puede superar 999,999.99</div>
             </div>
-            <div class="modal-field">
-                <label>Categoría</label>
-                <select [(ngModel)]="editingExpense.category" (change)="markEditFormDirty()">
-                    <option [value]="0">🍔 Food</option>
-                    <option [value]="1">🚗 Transportation</option>
-                    <option [value]="2">🎬 Entertainment</option>
-                    <option [value]="3">💡 Utilities</option>
-                    <option [value]="4">🏥 Healthcare</option>
-                    <option [value]="5">📦 Other</option>
-                </select>
-            </div>
-            <div class="modal-field">
-                <label>Fecha</label>
-                <input type="date" [(ngModel)]="editingExpense.date" (change)="markEditFormDirty()">
+        </div>
+
+        <!-- Campo Categoría -->
+        <div class="modal-field">
+            <label>Categoría *</label>
+            <select [formControl]="editCategory" (change)="markEditFormDirty()">
+                <option [value]="0">🍔 Food</option>
+                <option [value]="1">🚗 Transportation</option>
+                <option [value]="2">🎬 Entertainment</option>
+                <option [value]="3">💡 Utilities</option>
+                <option [value]="4">🏥 Healthcare</option>
+                <option [value]="5">📦 Other</option>
+            </select>
+        </div>
+
+        <!-- Campo Fecha -->
+        <div class="modal-field">
+            <label>Fecha *</label>
+            <input type="date" [formControl]="editDate" (change)="markEditFormDirty()">
+            <div *ngIf="editDate.invalid && editDate.touched" style="color: red; font-size: 0.75rem;">
+                <div *ngIf="editDate.errors?.['required']">📅 La fecha es obligatoria</div>
             </div>
         </div>
     </div>
 </app-modal>
 
-
-<!-- Modal para Confirmar Eliminación -->
-<app-modal [isOpen]="isDeleteModalOpen" [title]="deleteModalTitle" (onClose)="closeDeleteModal()"
+<!-- MODAL PARA CONFIRMAR ELIMINACIÓN -->
+<app-modal [isOpen]="isDeleteModalOpen" title="🗑️ Eliminar Gasto" (onClose)="closeDeleteModal()"
     (onConfirm)="confirmDelete()">
-
     <div style="text-align: center; padding: 1rem;">
         <p style="font-size: 1.2rem; margin-bottom: 1rem;">¿Estás seguro de que deseas eliminar este gasto?</p>
-        <p style="color: #ef4444; font-weight: bold;">Esta acción no se puede deshacer.</p>
+        <p style="color: #ef4444; font-weight: bold;">⚠️ Esta acción no se puede deshacer.</p>
+    </div>
+</app-modal>
+
+<!-- MODAL DE CONFIRMACIÓN PARA SALIR SIN GUARDAR -->
+<app-modal [isOpen]="showConfirmCloseModal" title="⚠️ Cambios sin guardar" (onClose)="cancelCloseModal()"
+    (onConfirm)="confirmCloseModal()">
+    <div style="text-align: center; padding: 1rem;">
+        <p>Tienes cambios sin guardar en el formulario.</p>
+        <p>¿Estás seguro de que quieres salir?</p>
+        <p style="color: #ef4444; font-size: 0.9rem;">Los cambios se perderán.</p>
     </div>
 </app-modal>

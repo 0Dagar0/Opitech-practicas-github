@@ -6,6 +6,13 @@ export interface Expense {
     category: ExpenseCategory;
 }
 
+export interface ExpenseForm {
+    description: string;
+    amount: number | null;
+    date: string;
+    category: ExpenseCategory | null;
+}
+
 export enum ExpenseCategory {
     Food,
     Transportation,

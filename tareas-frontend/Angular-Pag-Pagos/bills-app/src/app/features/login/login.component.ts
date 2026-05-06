@@ -1,39 +1,64 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { AuthActions } from '../../core/store/auth/auth.actions';
 import { Observable } from 'rxjs';
 import { AuthState } from '../../core/store/auth/auth.state';
 
+// Validador personalizado: al menos una mayúscula y una minúscula
+function passwordCaseValidator(control: any) {
+    const value = control.value || '';
+    const hasLower = /[a-z]/.test(value);
+    const hasUpper = /[A-Z]/.test(value);
+    if (!hasLower || !hasUpper) {
+        return { case: true };
+    }
+    return null;
+}
+
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, ReactiveFormsModule], // 👈 Cambiamos FormsModule por ReactiveFormsModule
     template: `
     <div class="login-container">
     <div class="login-card">
         <h2>Iniciar Sesión</h2>
-        <form (ngSubmit)="onSubmit()">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Campo Usuario -->
         <div class="form-group">
             <label>Usuario</label>
-            <input type="text" [(ngModel)]="username" name="username" required>
+            <input type="text" formControlName="username" placeholder="Ingrese su usuario">
+            <div *ngIf="username?.invalid && username?.touched" class="error-message">
+              <div *ngIf="username?.errors?.['required']">⚠️ El usuario es obligatorio</div>
+              <div *ngIf="username?.errors?.['minlength']">📝 Mínimo 3 caracteres</div>
+            </div>
         </div>
+
+        <!-- Campo Contraseña -->
         <div class="form-group">
             <label>Contraseña</label>
-            <input type="password" [(ngModel)]="password" name="password" required>
+            <input type="password" formControlName="password" placeholder="Ingrese su contraseña">
+            <div *ngIf="password?.invalid && password?.touched" class="error-message">
+              <div *ngIf="password?.errors?.['required']">⚠️ La contraseña es obligatoria</div>
+              <div *ngIf="password?.errors?.['minlength']">📝 Mínimo 4 caracteres</div>
+              <div *ngIf="password?.errors?.['case']">🔤 Debe contener al menos una mayúscula y una minúscula</div>
+            </div>
         </div>
-        <div *ngIf="error$ | async as error" class="error">
+
+          <div *ngIf="error$ | async as error" class="error">
             {{ error }}
         </div>
-        <button type="submit" [disabled]="loading$ | async">
+
+        <button type="submit" [disabled]="(loading$ | async) || loginForm.invalid">
             {{ (loading$ | async) ? 'Cargando...' : 'Ingresar' }}
         </button>
         </form>
     </div>
-    </div>
-    `,
+    </div>`,
+
     styles: [`
     .login-container {
         display: flex;
@@ -64,6 +89,9 @@ import { AuthState } from '../../core/store/auth/auth.state';
         border: 1px solid #cbd5e1;
         border-radius: 8px;
     }
+    input.ng-invalid.ng-touched {
+        border-color: #ef4444;
+    }
     button {
         width: 100%;
         padding: 0.5rem;
@@ -75,20 +103,39 @@ import { AuthState } from '../../core/store/auth/auth.state';
     }
     button:disabled {
         background: #94a3b8;
+        cursor: not-allowed;
     }
     .error {
         color: #ef4444;
         margin-bottom: 1rem;
+        font-size: 0.875rem;
     }
-    `]
+    .error-message {
+        color: #ef4444;
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+    }
+`]
 })
 export class LoginComponent implements OnInit {
     private store = inject(Store<{ auth: AuthState }>);
     private router = inject(Router);
-    username = '';
-    password = '';
-    loading$ = this.store.select(state => state.auth.loading);
-    error$ = this.store.select(state => state.auth.error);
+    private fb = inject(FormBuilder);
+
+    loginForm: FormGroup;
+    loading$: Observable<boolean>;
+    error$: Observable<string | null>;
+
+    constructor() {
+        // Crear formulario reactivo con validaciones
+        this.loginForm = this.fb.group({
+            username: ['', [Validators.required, Validators.minLength(3)]],
+            password: ['', [Validators.required, Validators.minLength(4), passwordCaseValidator]]
+        });
+
+        this.loading$ = this.store.select(state => state.auth.loading);
+        this.error$ = this.store.select(state => state.auth.error);
+    }
 
     ngOnInit() {
         this.store.select(state => state.auth.isAuthenticated).subscribe(isAuthenticated => {
@@ -98,15 +145,17 @@ export class LoginComponent implements OnInit {
         });
     }
 
+    // Getters para facilitar el acceso en el template
+    get username() { return this.loginForm.get('username'); }
+    get password() { return this.loginForm.get('password'); }
+
     onSubmit() {
-        if (!this.username.trim() || !this.password.trim()) {
-            alert('Usuario y contraseña son obligatorios');
+        if (this.loginForm.invalid) {
+            this.loginForm.markAllAsTouched();
             return;
         }
-        if (this.password.length < 4) {
-            alert('La contraseña debe tener al menos 4 caracteres');
-            return;
-        }
-        this.store.dispatch(AuthActions.login({ username: this.username, password: this.password }));
+
+        const { username, password } = this.loginForm.value;
+        this.store.dispatch(AuthActions.login({ username, password }));
     }
 }

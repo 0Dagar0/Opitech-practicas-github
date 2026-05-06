@@ -1,16 +1,24 @@
 import { createReducer, on } from '@ngrx/store';
-import { ExpenseState, initialState } from './expense.state';
-import { ExpenseActions } from './expense.actions';
 import { Expense } from '../models/expense.model';
+import { ExpenseActions } from './expense.actions';
 
-const calculateTotal = (expenses: Expense[]): number => {
-    return expenses.reduce((acc, curr) => acc + curr.amount, 0);
+export interface ExpenseState {
+    expenses: Expense[];
+    total: number;
+    loading: boolean;
+    error: string | null;
+}
+
+export const initialState: ExpenseState = {
+    expenses: [],
+    total: 0,
+    loading: false,
+    error: null
 };
 
 export const expenseReducer = createReducer(
     initialState,
 
-    // Cargar gastos
     on(ExpenseActions.loadExpenses, (state) => ({
         ...state,
         loading: true,
@@ -19,19 +27,17 @@ export const expenseReducer = createReducer(
 
     on(ExpenseActions.loadExpensesSuccess, (state, { expenses }) => ({
         ...state,
-        expenses: expenses,
-        total: calculateTotal(expenses),
+        expenses,
         loading: false,
-        error: null
+        total: expenses.reduce((sum, exp) => sum + exp.amount, 0)
     })),
 
     on(ExpenseActions.loadExpensesFailure, (state, { error }) => ({
         ...state,
         loading: false,
-        error: error
+        error
     })),
 
-    // Agregar gasto
     on(ExpenseActions.addExpense, (state) => ({
         ...state,
         loading: true,
@@ -41,53 +47,70 @@ export const expenseReducer = createReducer(
     on(ExpenseActions.addExpenseSuccess, (state, { expense }) => ({
         ...state,
         expenses: [...state.expenses, expense],
-        total: calculateTotal([...state.expenses, expense]),
-        loading: false
+        loading: false,
+        total: state.total + expense.amount
     })),
 
     on(ExpenseActions.addExpenseFailure, (state, { error }) => ({
         ...state,
         loading: false,
-        error: error
+        error
     })),
 
-    // Actualizar gasto
     on(ExpenseActions.updateExpense, (state) => ({
         ...state,
         loading: true,
         error: null
     })),
 
-    on(ExpenseActions.updateExpenseSuccess, (state, { expense }) => ({
-        ...state,
-        expenses: state.expenses.map(g => g.id === expense.id ? expense : g),
-        total: calculateTotal(state.expenses.map(g => g.id === expense.id ? expense : g)),
-        loading: false
-    })),
+    on(ExpenseActions.updateExpenseSuccess, (state, { expense }) => {
+        const updatedExpenses = state.expenses.map(e =>
+            e.id === expense.id ? expense : e
+        );
+        const newTotal = updatedExpenses.reduce((sum, e) => sum + e.amount, 0);
+
+        return {
+            ...state,
+            expenses: updatedExpenses,
+            loading: false,
+            total: newTotal
+        };
+    }),
 
     on(ExpenseActions.updateExpenseFailure, (state, { error }) => ({
         ...state,
         loading: false,
-        error: error
+        error
     })),
 
-    // Eliminar gasto
     on(ExpenseActions.deleteExpense, (state) => ({
         ...state,
         loading: true,
         error: null
     })),
 
-    on(ExpenseActions.deleteExpenseSuccess, (state, { id }) => ({
-        ...state,
-        expenses: state.expenses.filter(g => g.id !== id),
-        total: calculateTotal(state.expenses.filter(g => g.id !== id)),
-        loading: false
-    })),
+    on(ExpenseActions.deleteExpenseSuccess, (state, { id }) => {
+        const updatedExpenses = state.expenses.filter(e => e.id !== id);
+        const newTotal = updatedExpenses.reduce((sum, e) => sum + e.amount, 0);
+
+        return {
+            ...state,
+            expenses: updatedExpenses,
+            loading: false,
+            total: newTotal
+        };
+    }),
 
     on(ExpenseActions.deleteExpenseFailure, (state, { error }) => ({
         ...state,
         loading: false,
-        error: error
+        error
     }))
 );
+
+// selectors (para usar en el componente)
+// SELECTORS CORREGIDOS - Reciben el estado global de la app
+export const selectExpenses = (state: any) => state.expenses.expenses;
+export const selectExpensesTotal = (state: any) => state.expenses.total;
+export const selectExpensesLoading = (state: any) => state.expenses.loading;
+export const selectExpensesError = (state: any) => state.expenses.error;

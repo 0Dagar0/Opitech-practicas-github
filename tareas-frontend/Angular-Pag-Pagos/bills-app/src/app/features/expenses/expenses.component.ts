@@ -1,160 +1,298 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Expense } from '../../core/models/expense.model';
+import { map } from 'rxjs/operators';
+import { Expense, ExpenseCategory } from '../../core/models/expense.model';
 import { ExpenseActions } from '../../core/store/expense.actions';
-import { ExpenseState } from '../../core/store/expense.state';
+import {
+    selectExpenses,
+    selectExpensesTotal,
+    selectExpensesLoading,
+    selectExpensesError
+} from '../../core/store/expense.reducer';
 import { ModalComponent } from '../../shared/components/modal/modal.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-expenses',
     standalone: true,
-    imports: [CommonModule, FormsModule, ModalComponent],
+    imports: [CommonModule, ReactiveFormsModule, ModalComponent],
     templateUrl: './expenses.component.html',
     styleUrls: ['./expenses.component.css']
 })
-export class ExpensesComponent implements OnInit {
-    private store = inject(Store<{ expenses: ExpenseState }>);
-
-    isModalOpen = false;
-    modalTitle = '';
-    isEditModalOpen = false;
-    editModalTitle = '✏️ Editar Gasto';
-    isDeleteModalOpen = false;
-    deleteModalTitle = '🗑️ Confirmar Eliminación';
-    deleteExpenseId: number | null = null;
-
+export class ExpensesComponent implements OnInit, OnDestroy {
+    // Observables del store
     expenses$: Observable<Expense[]>;
     total$: Observable<number>;
     loading$: Observable<boolean>;
     error$: Observable<string | null>;
 
-    newExpense: Omit<Expense, 'id'> = {
-        description: '',
-        amount: 0,
-        date: new Date(),
-        category: 0
-    };
-
-    editingExpense: Expense | null = null;
+    // Estados de los modales
+    isModalOpen = false;
+    isEditModalOpen = false;
+    isDeleteModalOpen = false;
 
     isAddFormDirty = false;
     isEditFormDirty = false;
+    showConfirmCloseModal = false;
+    pendingCloseAction: 'add' | 'edit' | null = null;
 
-    constructor() {
-        this.expenses$ = this.store.select(state => state.expenses.expenses);
-        this.total$ = this.store.select(state => state.expenses.total);
-        this.loading$ = this.store.select(state => state.expenses.loading);
-        this.error$ = this.store.select(state => state.expenses.error);
+    // Formularios Reactivos
+    addForm: FormGroup;
+    editForm: FormGroup;
+
+    // Para el modal de editar (guardamos el ID del gasto)
+    editingExpenseId: number | null = null;
+
+    // Para el modal de eliminar
+    deleteId: number | null = null;
+
+    // Títulos de modales
+    modalTitle = '➕ Agregar Gasto';
+    editModalTitle = '✏️ Editar Gasto';
+    deleteModalTitle = '🗑️ Eliminar Gasto';
+
+    constructor(
+        private store: Store,
+        private fb: FormBuilder
+    ) {
+        // Inicializar observables con los selectores
+        this.expenses$ = this.store.select(selectExpenses);
+        this.total$ = this.store.select(selectExpensesTotal);
+        this.loading$ = this.store.select(selectExpensesLoading);
+        this.error$ = this.store.select(selectExpensesError);
+
+        // Crear formularios reactivos
+        this.addForm = this.createEmptyForm();
+        this.editForm = this.createEmptyForm();
     }
 
     ngOnInit(): void {
+        // Cargar gastos al iniciar
         this.store.dispatch(ExpenseActions.loadExpenses());
     }
 
-    addExpense(): void {
-        if (!this.newExpense.description || this.newExpense.amount <= 0) {
-            alert('Por favor complete los campos');
-            return;
-        }
-        const expenseToSend = {
-            ...this.newExpense,
-            date: new Date(this.newExpense.date)
-        };
-        this.store.dispatch(ExpenseActions.addExpense({ expense: expenseToSend }));
+    ngOnDestroy(): void {
+        // No necesitamos limpiar suscripciones porque Angular lo hace con | async
     }
 
-    updateExpense(): void {
-        if (this.editingExpense) {
-            this.store.dispatch(ExpenseActions.updateExpense({ expense: this.editingExpense }));
-        }
+    // 👈 CREAR FORMULARIO VACÍO
+    private createEmptyForm(): FormGroup {
+        return this.fb.group({
+            description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+            amount: [null, [Validators.required, Validators.min(0.01), Validators.max(999999.99)]],
+            date: [this.getTodayDateString(), Validators.required],
+            category: [ExpenseCategory.Other, Validators.required]
+        });
     }
 
-    getCategoryName(category: number): string {
-        const categories = ['Food', 'Transportation', 'Entertainment', 'Utilities', 'Healthcare', 'Other'];
-        return categories[category] || 'Other';
+    // 👈 OBTENER FECHA ACTUAL EN FORMATO YYYY-MM-DD
+    private getTodayDateString(): string {
+        const today = new Date();
+        return today.toISOString().split('T')[0];
     }
 
-    // ========== MODAL AGREGAR ==========
-    openAddModal(): void {
+    // 👈 VALIDAR FORMULARIOS
+    isAddFormValid(): boolean {
+        return this.addForm.valid;
+    }
+
+    isEditFormValid(): boolean {
+        return this.editForm.valid;
+    }
+
+    // 👈 MARCAR COMO DIRTY (para prevenir cierre accidental)
+    markAddFormDirty(): void {
+        this.addForm.markAsDirty();
+        this.isAddFormDirty = true;
+        console.log('isAddFormDirty =', this.isAddFormDirty);
+    }
+
+    markEditFormDirty(): void {
+        this.editForm.markAsDirty();
+        this.isEditFormDirty = true;
+    }
+
+    // 👈 RESETEAR FORMULARIOS
+    resetAddForm(): void {
+        this.addForm.reset({
+            description: '',
+            amount: null,
+            date: this.getTodayDateString(),
+            category: ExpenseCategory.Other
+        });
+        this.addForm.markAsPristine();
+        this.addForm.markAsUntouched();
         this.isAddFormDirty = false;
-        this.modalTitle = '➕ Agregar Nuevo Gasto';
+    }
+
+    resetEditForm(): void {
+        this.editForm.reset({
+            description: '',
+            amount: null,
+            date: this.getTodayDateString(),
+            category: ExpenseCategory.Other
+        });
+        this.editForm.markAsPristine();
+        this.editForm.markAsUntouched();
+        this.editingExpenseId = null;
+        this.isEditFormDirty = false;
+    }
+
+    // 👈 ABRIR MODAL DE AGREGAR
+    openAddModal(): void {
+        this.resetAddForm();
+        this.modalTitle = '➕ Agregar Gasto';
         this.isModalOpen = true;
     }
 
+    // 👈 ABRIR MODAL DE EDITAR
+    openEditModal(expense: Expense): void {
+        // Guardar el ID del gasto que estamos editando
+        this.editingExpenseId = expense.id;
+
+        // Cargar datos del gasto en el formulario
+        this.editForm.patchValue({
+            description: expense.description,
+            amount: expense.amount,
+            date: new Date(expense.date).toISOString().split('T')[0],
+            category: expense.category
+        });
+
+        this.editForm.markAsPristine();
+        this.editModalTitle = `✏️ Editar: ${expense.description}`;
+        this.isEditModalOpen = true;
+    }
+
+    // 👈 ABRIR MODAL DE ELIMINAR
+    openDeleteModal(id: number): void {
+        this.deleteId = id;
+        this.isDeleteModalOpen = true;
+    }
+
+    // 👈 CONFIRMAR AGREGAR
+    confirmAdd(): void {
+        if (this.addForm.invalid) {
+            this.addForm.markAllAsTouched();
+            return;
+        }
+        const formValue = this.addForm.value;
+        const newExpense: Omit<Expense, 'id'> = {
+            description: formValue.description,
+            amount: formValue.amount,
+            date: new Date(formValue.date),
+            category: formValue.category
+        };
+        this.store.dispatch(ExpenseActions.addExpense({ expense: newExpense }));
+        this.isAddFormDirty = false;
+        this.performCloseModal();
+    }
+
+    // 👈 CONFIRMAR EDITAR
+    confirmEdit(): void {
+        if (this.editForm.invalid) {
+            this.editForm.markAllAsTouched();
+            return;
+        }
+        if (this.editingExpenseId === null) return;
+        const formValue = this.editForm.value;
+        const updatedExpense: Expense = {
+            id: this.editingExpenseId,
+            description: formValue.description,
+            amount: formValue.amount,
+            date: new Date(formValue.date),
+            category: formValue.category
+        };
+        this.store.dispatch(ExpenseActions.updateExpense({ expense: updatedExpense }));
+        // 👇 Cerrar sin preguntar (reseteamos dirty y cerramos directamente)
+        this.isEditFormDirty = false;
+        this.performCloseEditModal();   // 👈 Este método no verifica dirty
+    }
+
+    // 👈 CONFIRMAR ELIMINAR
+    confirmDelete(): void {
+        if (this.deleteId !== null) {
+            this.store.dispatch(ExpenseActions.deleteExpense({ id: this.deleteId }));
+            this.closeDeleteModal();
+        }
+    }
+
+    // 👈 CERRAR MODALES
     closeModal(): void {
         if (this.isAddFormDirty) {
-            const confirm = window.confirm('Hay cambios sin guardar. ¿Estás seguro de que quieres salir?');
-            if (!confirm) return;
+            this.pendingCloseAction = 'add';
+            this.showConfirmCloseModal = true;
+            return;
         }
-        this.isModalOpen = false;
-        this.isAddFormDirty = false;
-        this.newExpense = {
-            description: '',
-            amount: 0,
-            date: new Date(),
-            category: 0
-        };
-    }
-
-    confirmAdd(): void {
-        if (this.isAddFormDirty) {
-            this.isAddFormDirty = false;
-        }
-        this.addExpense();
-        this.closeModal();
-    }
-
-    markAddFormDirty(): void {
-        this.isAddFormDirty = true;
-    }
-
-    // ========== MODAL EDITAR ==========
-    openEditModal(expense: Expense): void {
-        this.isEditFormDirty = false;
-        this.editingExpense = { ...expense };
-        this.isEditModalOpen = true;
+        this.performCloseModal();
     }
 
     closeEditModal(): void {
         if (this.isEditFormDirty) {
-            const confirm = window.confirm('Hay cambios sin guardar. ¿Estás seguro de que quieres salir?');
-            if (!confirm) return;
+            this.pendingCloseAction = 'edit';
+            this.showConfirmCloseModal = true;
+            return;
         }
-        this.isEditModalOpen = false;
-        this.isEditFormDirty = false;
-        this.editingExpense = null;
+        this.performCloseEditModal();
     }
 
-    confirmEdit(): void {
-        if (this.isEditFormDirty) {
-            this.isEditFormDirty = false;
-        }
-        this.updateExpense();
-        this.closeEditModal();
-    }
-
-    markEditFormDirty(): void {
-        this.isEditFormDirty = true;
-    }
-
-    // ========== MODAL ELIMINAR ==========
-    openDeleteModal(id: number): void {
-        this.deleteExpenseId = id;
-        this.isDeleteModalOpen = true;
+    // 👇 AÑADE ESTOS MÉTODOS NUEVOS (después de closeEditModal)
+    performCloseModal(): void {
+        this.isModalOpen = false;
+        this.resetAddForm();
     }
 
     closeDeleteModal(): void {
         this.isDeleteModalOpen = false;
-        this.deleteExpenseId = null;
+        this.deleteId = null;
     }
 
-    confirmDelete(): void {
-        if (this.deleteExpenseId !== null) {
-            this.store.dispatch(ExpenseActions.deleteExpense({ id: this.deleteExpenseId }));
-        }
-        this.closeDeleteModal();
+    performCloseEditModal(): void {
+        this.isEditModalOpen = false;
+        this.resetEditForm();
     }
+
+    confirmCloseModal(): void {
+        if (this.pendingCloseAction === 'add') {
+            this.performCloseModal();
+        } else if (this.pendingCloseAction === 'edit') {
+            this.performCloseEditModal();
+        }
+        this.showConfirmCloseModal = false;
+        this.pendingCloseAction = null;
+    }
+
+    cancelCloseModal(): void {
+        this.showConfirmCloseModal = false;
+        this.pendingCloseAction = null;
+    }
+
+    // 👈 OBTENER NOMBRE DE CATEGORÍA (para mostrar en la lista)
+    getCategoryName(category: ExpenseCategory): string {
+        const categories = {
+            [ExpenseCategory.Food]: '🍔 Food',
+            [ExpenseCategory.Transportation]: '🚗 Transportation',
+            [ExpenseCategory.Entertainment]: '🎬 Entertainment',
+            [ExpenseCategory.Utilities]: '💡 Utilities',
+            [ExpenseCategory.Healthcare]: '🏥 Healthcare',
+            [ExpenseCategory.Other]: '📦 Other'
+        };
+        return categories[category] || '📦 Other';
+    }
+
+    // GETTERS PARA ACCEDER A LOS CONTROLES EN EL HTML
+    // 👈 GETTERS (con ! para indicar que no son null)
+    // Para el formulario de agregar
+    // Luego los getters así:
+    get addDescription() { return this.addForm.get('description') as FormControl; }
+    get addAmount() { return this.addForm.get('amount') as FormControl; }
+    get addDate() { return this.addForm.get('date') as FormControl; }
+    get addCategory() { return this.addForm.get('category') as FormControl; }
+
+    get editDescription() { return this.editForm.get('description') as FormControl; }
+    get editAmount() { return this.editForm.get('amount') as FormControl; }
+    get editDate() { return this.editForm.get('date') as FormControl; }
+    get editCategory() { return this.editForm.get('category') as FormControl; }
 }
