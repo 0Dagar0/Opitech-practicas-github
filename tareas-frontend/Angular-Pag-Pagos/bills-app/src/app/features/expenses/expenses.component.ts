@@ -33,7 +33,6 @@ export class ExpensesComponent implements OnInit, OnDestroy {
     isModalOpen = false;
     isEditModalOpen = false;
     isDeleteModalOpen = false;
-
     isAddFormDirty = false;
     isEditFormDirty = false;
     showConfirmCloseModal = false;
@@ -42,11 +41,7 @@ export class ExpensesComponent implements OnInit, OnDestroy {
     // Formularios Reactivos
     addForm: FormGroup;
     editForm: FormGroup;
-
-    // Para el modal de editar (guardamos el ID del gasto)
     editingExpenseId: number | null = null;
-
-    // Para el modal de eliminar
     deleteId: number | null = null;
 
     // Títulos de modales
@@ -75,10 +70,9 @@ export class ExpensesComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // No necesitamos limpiar suscripciones porque Angular lo hace con | async
     }
 
-    // 👈 CREAR FORMULARIO VACÍO
+    //  CREAR FORMULARIO VACÍO
     private createEmptyForm(): FormGroup {
         return this.fb.group({
             description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
@@ -88,13 +82,13 @@ export class ExpensesComponent implements OnInit, OnDestroy {
         });
     }
 
-    // 👈 OBTENER FECHA ACTUAL EN FORMATO YYYY-MM-DD
+    //  OBTENER FECHA ACTUAL EN FORMATO YYYY-MM-DD
     private getTodayDateString(): string {
         const today = new Date();
         return today.toISOString().split('T')[0];
     }
 
-    // 👈 VALIDAR FORMULARIOS
+    //  VALIDAR FORMULARIOS
     isAddFormValid(): boolean {
         return this.addForm.valid;
     }
@@ -103,7 +97,6 @@ export class ExpensesComponent implements OnInit, OnDestroy {
         return this.editForm.valid;
     }
 
-    // 👈 MARCAR COMO DIRTY (para prevenir cierre accidental)
     markAddFormDirty(): void {
         this.addForm.markAsDirty();
         this.isAddFormDirty = true;
@@ -141,16 +134,15 @@ export class ExpensesComponent implements OnInit, OnDestroy {
         this.isEditFormDirty = false;
     }
 
-    // 👈 ABRIR MODAL DE AGREGAR
+    // ABRIR MODAL DE AGREGAR
     openAddModal(): void {
         this.resetAddForm();
         this.modalTitle = '➕ Agregar Gasto';
         this.isModalOpen = true;
     }
 
-    // 👈 ABRIR MODAL DE EDITAR
+    // ABRIR MODAL DE EDITAR
     openEditModal(expense: Expense): void {
-        // Guardar el ID del gasto que estamos editando
         this.editingExpenseId = expense.id;
 
         // Cargar datos del gasto en el formulario
@@ -166,13 +158,13 @@ export class ExpensesComponent implements OnInit, OnDestroy {
         this.isEditModalOpen = true;
     }
 
-    // 👈 ABRIR MODAL DE ELIMINAR
+    // ABRIR MODAL DE ELIMINAR
     openDeleteModal(id: number): void {
         this.deleteId = id;
         this.isDeleteModalOpen = true;
     }
 
-    // 👈 CONFIRMAR AGREGAR
+    // CONFIRMAR AGREGAR
     confirmAdd(): void {
         if (this.addForm.invalid) {
             this.addForm.markAllAsTouched();
@@ -190,7 +182,7 @@ export class ExpensesComponent implements OnInit, OnDestroy {
         this.performCloseModal();
     }
 
-    // 👈 CONFIRMAR EDITAR
+    // CONFIRMAR EDITAR
     confirmEdit(): void {
         if (this.editForm.invalid) {
             this.editForm.markAllAsTouched();
@@ -206,12 +198,11 @@ export class ExpensesComponent implements OnInit, OnDestroy {
             category: formValue.category
         };
         this.store.dispatch(ExpenseActions.updateExpense({ expense: updatedExpense }));
-        // 👇 Cerrar sin preguntar (reseteamos dirty y cerramos directamente)
         this.isEditFormDirty = false;
-        this.performCloseEditModal();   // 👈 Este método no verifica dirty
+        this.performCloseEditModal();
     }
 
-    // 👈 CONFIRMAR ELIMINAR
+    // CONFIRMAR ELIMINAR
     confirmDelete(): void {
         if (this.deleteId !== null) {
             this.store.dispatch(ExpenseActions.deleteExpense({ id: this.deleteId }));
@@ -219,7 +210,7 @@ export class ExpensesComponent implements OnInit, OnDestroy {
         }
     }
 
-    // 👈 CERRAR MODALES
+    // CERRAR MODALES
     closeModal(): void {
         if (this.isAddFormDirty) {
             this.pendingCloseAction = 'add';
@@ -238,7 +229,6 @@ export class ExpensesComponent implements OnInit, OnDestroy {
         this.performCloseEditModal();
     }
 
-    // 👇 AÑADE ESTOS MÉTODOS NUEVOS (después de closeEditModal)
     performCloseModal(): void {
         this.isModalOpen = false;
         this.resetAddForm();
@@ -269,7 +259,7 @@ export class ExpensesComponent implements OnInit, OnDestroy {
         this.pendingCloseAction = null;
     }
 
-    // 👈 OBTENER NOMBRE DE CATEGORÍA (para mostrar en la lista)
+    // OBTENER NOMBRE DE CATEGORÍA
     getCategoryName(category: ExpenseCategory): string {
         const categories = {
             [ExpenseCategory.Food]: '🍔 Food',
@@ -283,9 +273,6 @@ export class ExpensesComponent implements OnInit, OnDestroy {
     }
 
     // GETTERS PARA ACCEDER A LOS CONTROLES EN EL HTML
-    // 👈 GETTERS (con ! para indicar que no son null)
-    // Para el formulario de agregar
-    // Luego los getters así:
     get addDescription() { return this.addForm.get('description') as FormControl; }
     get addAmount() { return this.addForm.get('amount') as FormControl; }
     get addDate() { return this.addForm.get('date') as FormControl; }

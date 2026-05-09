@@ -109,7 +109,6 @@ export const expenseReducer = createReducer(
 );
 
 // selectors (para usar en el componente)
-// SELECTORS CORREGIDOS - Reciben el estado global de la app
 export const selectExpenses = (state: any) => state.expenses.expenses;
 export const selectExpensesTotal = (state: any) => state.expenses.total;
 export const selectExpensesLoading = (state: any) => state.expenses.loading;
