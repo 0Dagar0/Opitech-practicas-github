@@ -1,0 +1,88 @@
+<mxfile host="Electron">
+  <diagram name="Página-1" id="Ixw5WqIqUo0y8Z3EqdE9">
+    <mxGraphModel dx="1414" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-1" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" value="OpiSupport. API" vertex="1">
+          <mxGeometry height="146" width="220" x="365" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-2" parent="ZnM1IBw9ni78DdIAhLss-1" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="- AuthController" vertex="1">
+          <mxGeometry height="30" width="220" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-3" parent="ZnM1IBw9ni78DdIAhLss-1" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="- TicketsController" vertex="1">
+          <mxGeometry height="30" width="220" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-4" parent="ZnM1IBw9ni78DdIAhLss-1" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="-ReportsController" vertex="1">
+          <mxGeometry height="30" width="220" y="86" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-5" parent="ZnM1IBw9ni78DdIAhLss-1" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="- Program.cs ( configuración DI, JWT )&amp;nbsp;" vertex="1">
+          <mxGeometry height="30" width="220" y="116" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-6" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;startArrow=classic;startFill=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="475" y="230" />
+            </Array>
+            <mxPoint x="474.5" y="266" as="sourcePoint" />
+            <mxPoint x="474.5" y="206" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-7" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" value="OpiSupport. Application" vertex="1">
+          <mxGeometry height="116" width="270" x="340" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-8" parent="ZnM1IBw9ni78DdIAhLss-7" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="- DTOs ( Login, Ticket, Report )&amp;nbsp;" vertex="1">
+          <mxGeometry height="30" width="270" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-9" parent="ZnM1IBw9ni78DdIAhLss-7" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="- Interfaces ( IAuthService, ITicketService )&amp;nbsp;" vertex="1">
+          <mxGeometry height="30" width="270" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-10" parent="ZnM1IBw9ni78DdIAhLss-7" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="- Validaciones" vertex="1">
+          <mxGeometry height="30" width="270" y="86" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-17" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" value="OpiSupport.Infrastructure" vertex="1">
+          <mxGeometry height="206" width="270" x="340" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-18" parent="ZnM1IBw9ni78DdIAhLss-17" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="- Data/ApplicationDbContext" vertex="1">
+          <mxGeometry height="30" width="270" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-19" parent="ZnM1IBw9ni78DdIAhLss-17" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="- Data/DbContextSeed" vertex="1">
+          <mxGeometry height="30" width="270" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-20" parent="ZnM1IBw9ni78DdIAhLss-17" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="- Services/ AuthService" vertex="1">
+          <mxGeometry height="30" width="270" y="86" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-22" parent="ZnM1IBw9ni78DdIAhLss-17" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="- Services/ TicketService" vertex="1">
+          <mxGeometry height="30" width="270" y="116" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-23" parent="ZnM1IBw9ni78DdIAhLss-17" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="- Services/ SlaMonitorService" vertex="1">
+          <mxGeometry height="30" width="270" y="146" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-24" parent="ZnM1IBw9ni78DdIAhLss-17" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="- Migrations" vertex="1">
+          <mxGeometry height="30" width="270" y="176" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-21" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;startArrow=classic;startFill=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="474.5" y="446" as="sourcePoint" />
+            <mxPoint x="474.5" y="386" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-25" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;startArrow=classic;startFill=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="474.5" y="716" as="sourcePoint" />
+            <mxPoint x="474.5" y="656" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-26" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" value="OpiSupport. Domain" vertex="1">
+          <mxGeometry height="86" width="270" x="340" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-27" parent="ZnM1IBw9ni78DdIAhLss-26" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="- Entities ( User, Ticket, Alert, ...)&amp;nbsp;" vertex="1">
+          <mxGeometry height="30" width="270" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ZnM1IBw9ni78DdIAhLss-28" parent="ZnM1IBw9ni78DdIAhLss-26" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="- Enums ( Priority, Status )&amp;nbsp;" vertex="1">
+          <mxGeometry height="30" width="270" y="56" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

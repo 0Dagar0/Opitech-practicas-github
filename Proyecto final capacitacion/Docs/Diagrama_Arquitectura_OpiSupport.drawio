@@ -1,0 +1,130 @@
+<mxfile host="Electron">
+  <diagram name="Página-1" id="vr_QJsvDrbVlEtvOoEpX">
+    <mxGraphModel dx="2020" dy="1201" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="iaocKMzC3APIGIxnYYkV-2" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endFill=0;startArrow=classic;startFill=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="854.5" y="237" as="sourcePoint" />
+            <mxPoint x="854.5" y="153" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&amp;nbsp;( HTTP / HTTPS&amp;nbsp; JSON + JWT )" vertex="1">
+          <mxGeometry height="30" width="190" x="850" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-34" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" value="FRONTEND ( React )" vertex="1">
+          <mxGeometry height="116" width="270" x="720" y="40" as="geometry">
+            <mxRectangle height="30" width="150" x="360" y="350" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-35" parent="iaocKMzC3APIGIxnYYkV-34" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;-Pantallas ( Login, Tickets, Detalle, Reportes)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-36" parent="iaocKMzC3APIGIxnYYkV-34" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;-Estado global ( Context / Redux )&amp;nbsp;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-37" parent="iaocKMzC3APIGIxnYYkV-34" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;span style=&quot;text-align: justify;&quot;&gt;- Consumo de API&amp;nbsp;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="86" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-40" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" value="API GATEWAY (  ASP.NET )" vertex="1">
+          <mxGeometry height="146" width="270" x="720" y="240" as="geometry">
+            <mxRectangle height="30" width="150" x="360" y="350" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-41" parent="iaocKMzC3APIGIxnYYkV-40" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;div&gt;- Controladores ( Auth, Tickets, Reports )&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-42" parent="iaocKMzC3APIGIxnYYkV-40" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;div&gt;- Filtros de autenticación&amp;nbsp;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-43" parent="iaocKMzC3APIGIxnYYkV-40" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;- Middleware ( CORS, Loggin )&amp;nbsp;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="86" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-44" parent="iaocKMzC3APIGIxnYYkV-40" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;- Swagger UI&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="116" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-45" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endFill=0;startArrow=classic;startFill=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="850" y="470" as="sourcePoint" />
+            <mxPoint x="850" y="386" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-46" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" value="APLICATION LAYER" vertex="1">
+          <mxGeometry height="116" width="270" x="720" y="470" as="geometry">
+            <mxRectangle height="30" width="150" x="360" y="350" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-47" parent="iaocKMzC3APIGIxnYYkV-46" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;div&gt;-DTOs ( CreateTicket Dto, etc )&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-48" parent="iaocKMzC3APIGIxnYYkV-46" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;div&gt;- Interfaces ( ITicketService )&amp;nbsp;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-49" parent="iaocKMzC3APIGIxnYYkV-46" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;- Validaciones de negocio&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="86" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-51" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endFill=0;startArrow=classic;startFill=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="850" y="669" as="sourcePoint" />
+            <mxPoint x="850" y="585" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-52" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" value="DOMAIN LAYER ( Entidades ) " vertex="1">
+          <mxGeometry height="80" width="270" x="720" y="670" as="geometry">
+            <mxRectangle height="30" width="150" x="360" y="350" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-53" parent="iaocKMzC3APIGIxnYYkV-52" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;div&gt;- User, Ticket, Category, Area, Commet, StatusHistory, Alert, TechnicianSpecialty&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="54" width="270" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-56" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endFill=0;startArrow=classic;startFill=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="850" y="834" as="sourcePoint" />
+            <mxPoint x="850" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-57" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" value="INFRASTRUCTURE LAYER" vertex="1">
+          <mxGeometry height="176" width="270" x="720" y="830" as="geometry">
+            <mxRectangle height="30" width="150" x="360" y="350" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-58" parent="iaocKMzC3APIGIxnYYkV-57" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;div&gt;-DbContext ( EF Core )&amp;nbsp;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-59" parent="iaocKMzC3APIGIxnYYkV-57" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;div&gt;- Repositirios&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-60" parent="iaocKMzC3APIGIxnYYkV-57" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;- Servicios ( TicketService, AuthService )&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="86" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-61" parent="iaocKMzC3APIGIxnYYkV-57" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;- Background Services ( SLA )&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="116" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-62" parent="iaocKMzC3APIGIxnYYkV-57" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;- Mapeo o Postgre SQL&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="146" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-63" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" value="POSTGRESQL" vertex="1">
+          <mxGeometry height="116" width="270" x="720" y="1090" as="geometry">
+            <mxRectangle height="30" width="150" x="360" y="350" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-64" parent="iaocKMzC3APIGIxnYYkV-63" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;div&gt;- Tablas ( Users, tickets, ...)&amp;nbsp;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-65" parent="iaocKMzC3APIGIxnYYkV-63" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;div&gt;- Relaciones, Índices&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-66" parent="iaocKMzC3APIGIxnYYkV-63" style="text;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;whiteSpace=wrap;html=1;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;- Almacenamiento de datos&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="270" y="86" as="geometry" />
+        </mxCell>
+        <mxCell id="iaocKMzC3APIGIxnYYkV-67" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endFill=0;startArrow=classic;startFill=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="850" y="1090" as="sourcePoint" />
+            <mxPoint x="850" y="1006" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
